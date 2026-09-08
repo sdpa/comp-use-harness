@@ -1,0 +1,44 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+*.iml
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+ENV/
+
+# Node / JavaScript
+node_modules/
+.npm/
+.pnpm-store/
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.*
+
+# Build artifacts
+dist/
+build/
+out/
+coverage/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# System files
+Thumbs.db
