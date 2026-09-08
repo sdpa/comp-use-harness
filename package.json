@@ -1,0 +1,14 @@
+{
+  "name": "computer-use-harness-ui",
+  "version": "0.1.0",
+  "description": "Electron desktop shell for the computer-use harness",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "test": "python -m pytest -q"
+  },
+  "devDependencies": {
+    "electron": "^35.0.0"
+  }
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self';" />
+    <title>Computer-Use Harness</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">CU</div>
+          <div>
+            <h1>Computer-Use Harness</h1>
+            <p>Desktop orchestration UI</p>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item active">Overview</button>
+          <button class="nav-item">Tasks</button>
+          <button class="nav-item">Session Log</button>
+          <button class="nav-item">Settings</button>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Active session</p>
+            <h2>Play music in iTunes</h2>
+          </div>
+          <button class="primary">Run task</button>
+        </header>
+
+        <section class="metrics">
+          <div class="card">
+            <span class="label">Status</span>
+            <strong id="status">Ready</strong>
+          </div>
+          <div class="card">
+            <span class="label">Subtasks</span>
+            <strong id="subtask-count">3</strong>
+          </div>
+          <div class="card">
+            <span class="label">Model</span>
+            <strong>Qwen2.5-VL</strong>
+          </div>
+        </section>
+
+        <section class="plan-panel">
+          <div class="panel-header">
+            <h3>Execution plan</h3>
+            <span class="status-pill">DAG</span>
+          </div>
+          <ol id="task-list" class="task-list"></ol>
+        </section>
+      </main>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>

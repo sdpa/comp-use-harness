@@ -4,11 +4,11 @@ from typing import Any
 
 
 class DesktopShell:
-    """Small desktop shell placeholder for viewing task progress.
+    """Python-side compatibility wrapper for the Electron desktop UI.
 
-    This is intentionally lightweight and does not depend on Electron. If a
-    graphical environment is present, the app tries to open a basic Tkinter
-    window; otherwise the status is just printed to stdout.
+    The actual end-user interface is created in the Electron app under the
+    `electron/` directory. This shell remains as a small compatibility shim so the
+    backend can expose status updates and keep the desktop shell boundary clean.
     """
 
     def __init__(self, title: str = "Computer-Use Harness") -> None:
@@ -20,17 +20,10 @@ class DesktopShell:
         print(f"[{self.title}] {self.status}")
 
     def show(self) -> None:
-        try:
-            import tkinter as tk
-        except Exception:  # pragma: no cover - non-graphical environment fallback
-            print(f"[{self.title}] GUI unavailable; shell started in console mode")
-            return
-
-        root = tk.Tk()
-        root.title(self.title)
-        label = tk.Label(root, text="Computer-Use Harness is running", padx=20, pady=20)
-        label.pack()
-        root.mainloop()
+        print(
+            f"[{self.title}] Electron desktop shell is the UI front-end. "
+            "Run `npm start` from the repository root to launch it."
+        )
 
 
 if __name__ == "__main__":
