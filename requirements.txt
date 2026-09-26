@@ -1,6 +1,0 @@
-mcp>=1.0.0
-pyautogui>=0.9.54
-mss>=9.0.0
-pynput>=1.7.6
-pydantic>=2.7.4
-pytest>=8.0.0

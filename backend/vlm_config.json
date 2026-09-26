@@ -1,0 +1,5 @@
+{
+  "vlm_base_url": "http://localhost:11435/v1",
+  "vlm_model": "mlx-community/Qwen2.5-VL-7B-Instruct-4bit",
+  "vlm_api_key": "mlx"
+}

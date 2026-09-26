@@ -42,3 +42,4 @@ coverage/
 
 # System files
 Thumbs.db
+sessions.db
