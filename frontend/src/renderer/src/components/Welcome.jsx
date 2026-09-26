@@ -24,7 +24,7 @@ export default function Welcome({ onRun, backendOnline }) {
 
       {backendOnline === false && (
         <div className="backend-warning">
-          ⚠ Backend offline — start the Python server to run real tasks.
+          ⚠ Backend offline — run backend/build/harness to run real tasks.
         </div>
       )}
 

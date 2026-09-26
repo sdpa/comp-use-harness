@@ -11,6 +11,8 @@ import Welcome   from './components/Welcome'
 import Stream    from './components/Stream'
 import PromptBar from './components/PromptBar'
 import Settings  from './components/Settings'
+import TargetApp from './components/TargetApp'
+import { ComputerCard } from './components/ComputerPreview'
 
 import { useTask }     from './hooks/useTask'
 import { useSessions } from './hooks/useSessions'
@@ -25,9 +27,10 @@ export default function App() {
   const { tasks, sessions, startTask, finishTask, upsertSession } = useSessions()
 
   /* ── Active task (real backend) ──────────────────────────── */
-  const { running, steps, status, elapsed, showThinking, dryRun, vlmEnabled, callUser, run, abort, reset } = useTask()
+  const { running, steps, status, elapsed, showThinking, dryRun, vlmEnabled, callUser, computer, run, abort, reset } = useTask()
 
   /* ── Navigation ──────────────────────────────────────────── */
+  const [targetPid, setTargetPid] = useState(0)
   const [currentId,    setCurrentId]    = useState(null)
   const [view,         setView]         = useState('welcome') // 'welcome' | 'stream'
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -88,13 +91,12 @@ export default function App() {
 
     startTask(id, title)
 
-    const result = await run(prompt)
+    const result = await run(prompt, targetPid)
     log.info(`runTask done  status=${result.status}  steps=${result.steps.length}  elapsed=${result.elapsed_ms}ms`)
 
     // Sync final state from the resolved result
     setLiveStatus(result.status)
     setLiveSteps(result.steps)
-    setLivePlan(result.plan ?? [])
     setLiveElapsed(result.elapsed_ms)
 
     finishTask(id, result.status, result.steps)
@@ -106,7 +108,7 @@ export default function App() {
       steps:      result.steps,
       elapsed_ms: result.elapsed_ms,
     })
-  }, [running, run, status, steps, elapsed, startTask, finishTask, upsertSession])
+  }, [running, run, targetPid, status, steps, elapsed, startTask, finishTask, upsertSession])
 
   /* ── Expose to Electron menu ─────────────────────────────── */
   if (typeof window !== 'undefined') {
@@ -150,6 +152,7 @@ export default function App() {
         />
 
         <div className="main">
+          {!historyMode && computer && <ComputerCard computer={computer} running={running} onStop={abort} />}
           {view === 'welcome' ? (
             <Welcome onRun={runTask} backendOnline={backendOnline} />
           ) : (
@@ -169,6 +172,7 @@ export default function App() {
             />
           )}
 
+          <TargetApp value={targetPid} onChange={setTargetPid} running={running} />
           <PromptBar
             running={running}
             model={model}

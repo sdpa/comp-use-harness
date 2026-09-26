@@ -1,0 +1,92 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Harness: build backend",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "-C",
+        "backend",
+        "-j4"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Harness: backend",
+      "type": "shell",
+      "command": "./backend/build/harness",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "Harness: build backend",
+      "isBackground": true,
+      "problemMatcher": {
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^C\\+\\+ backend",
+          "endsPattern": "C\\+\\+ backend listening on"
+        },
+        "base": "$gcc"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Harness: format",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "-C",
+        "backend",
+        "format"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Harness: check",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "-C",
+        "backend",
+        "check"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "Harness: run",
+      "type": "shell",
+      "command": "./backend/build/harness-cli",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "Harness: build backend",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      }
+    }
+  ]
+}

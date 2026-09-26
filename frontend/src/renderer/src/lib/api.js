@@ -1,7 +1,7 @@
 /**
  * Computer-Use Harness — API client
  *
- * Communicates with the Python FastAPI backend at BACKEND_URL.
+ * Communicates with the C++ backend at BACKEND_URL.
  */
 
 const log = {
@@ -75,12 +75,13 @@ export async function fetchTasks() {
   return res.json()
 }
 
-export async function createTask(prompt) {
+export async function createTask(prompt, targetPid = 0, signal) {
   log.info(`POST /api/tasks  prompt="${prompt.slice(0, 60)}${prompt.length > 60 ? '…' : ''}"`)
   const res = await fetch(`${BACKEND_URL}/api/tasks`, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ prompt }),
+    body:    JSON.stringify({ prompt, target_pid: targetPid }),
+    signal,
   })
   if (!res.ok) throw new Error(`createTask: HTTP ${res.status}`)
   const data = await res.json()
@@ -103,7 +104,7 @@ export async function createTask(prompt) {
  * Returns a close() function to abort streaming.
  */
 export function streamTask(taskId, callbacks = {}) {
-  const { onInfo, onStep, onCallUser, onComplete, onError } = callbacks
+  const { onInfo, onStep, onCallUser, onComplete, onError, onComputerFrame, onComputerCursor, onComputerTarget } = callbacks
 
   const url = `${getWsUrl()}/api/tasks/${taskId}/stream`
   log.info(`WS open  ${url}`)
@@ -114,12 +115,15 @@ export function streamTask(taskId, callbacks = {}) {
   ws.onopen = () => log.info(`WS connected → task ${taskId}`)
 
   ws.onmessage = (evt) => {
+    if (closed) return
     let msg
     try {
       msg = JSON.parse(evt.data)
     } catch (err) {
       log.error(`WS parse error: ${err.message}`)
+      closed = true
       onError?.(err)
+      ws.close()
       return
     }
 
@@ -129,6 +133,15 @@ export function streamTask(taskId, callbacks = {}) {
         onInfo?.(msg)
         break
 
+      case 'computer_frame':
+        onComputerFrame?.(msg)
+        break
+      case 'computer_cursor':
+        onComputerCursor?.(msg)
+        break
+      case 'computer_target':
+        onComputerTarget?.(msg)
+        break
       case 'step':
         stepCount++
         log.info(`WS step #${stepCount}  [${msg.step?.type}] ${msg.step?.label}`)
@@ -141,18 +154,21 @@ export function streamTask(taskId, callbacks = {}) {
         break
 
       case 'task_failed':
+        closed = true
         log.warn(`WS task_failed  detail=${msg.detail}`)
         onError?.(new Error(msg.detail || 'Task failed'))
         ws.close()
         break
 
       case 'complete':
+        closed = true
         log.info(`WS complete  elapsed=${msg.elapsed_ms}ms`)
         onComplete?.(msg)
         ws.close()
         break
 
       case 'error':
+        closed = true
         log.error(`WS server error: ${msg.message}`)
         onError?.(new Error(msg.message))
         ws.close()
@@ -165,11 +181,17 @@ export function streamTask(taskId, callbacks = {}) {
 
   ws.onerror = () => {
     log.error(`WS error on task ${taskId}`)
-    if (!closed) onError?.(new Error('WebSocket connection failed'))
+    if (!closed) {
+      closed = true
+      onError?.(new Error('WebSocket connection failed'))
+      ws.close()
+    }
   }
 
   ws.onclose = (evt) => {
+    const unexpected = !closed
     closed = true
+    if (unexpected) onError?.(new Error('Computer-use connection ended before the task completed'))
     log.info(`WS closed  code=${evt.code}  reason="${evt.reason || 'none'}"`)
   }
 
@@ -178,4 +200,10 @@ export function streamTask(taskId, callbacks = {}) {
     closed = true
     ws.close()
   }
+}
+
+export async function fetchApplications() {
+  const res = await fetch(`${BACKEND_URL}/api/apps`)
+  if (!res.ok) throw new Error('Could not load target applications. Restart the updated backend.')
+  return res.json()
 }

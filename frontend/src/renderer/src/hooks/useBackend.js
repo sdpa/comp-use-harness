@@ -1,5 +1,5 @@
 /**
- * useBackend — polls the Python backend health endpoint.
+ * useBackend — polls the C++ backend health endpoint.
  * Returns { online, checking }.
  */
 import { useState, useEffect, useCallback } from 'react'

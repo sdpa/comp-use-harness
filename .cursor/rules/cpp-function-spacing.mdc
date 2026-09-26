@@ -1,0 +1,24 @@
+---
+description: Separate C++ function definitions with a blank line
+globs: backend/**/*.cpp,backend/**/*.hpp,backend/**/*.mm
+alwaysApply: false
+---
+
+# Function spacing
+
+Leave one blank line between function definitions, including class methods and
+Objective-C++ functions. Keep declarations grouped when appropriate.
+
+The root `.clang-format` enforces this with `SeparateDefinitionBlocks: Always`.
+Run `make -C backend format` after edits and `make -C backend check` before
+finishing C++ changes.
+
+```cpp
+void first() {
+  work();
+}
+
+void second() {
+  more_work();
+}
+```

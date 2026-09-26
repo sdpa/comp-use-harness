@@ -1,0 +1,44 @@
+.computer-window { height: 100vh; min-height: 240px; display: flex; flex-direction: column; background: #101015; color: #eeedf5; overflow: hidden; }
+.computer-window-bar { display: flex; gap: 8px; align-items: center; padding: 9px 14px 9px 85px; height: 44px; flex-shrink: 0; font-size: 12px; font-weight: 600; -webkit-app-region: drag; }
+.computer-window-bar button { margin-left: auto; padding: 0 8px; font-size: 22px; -webkit-app-region: no-drag; border-radius: 6px; }
+.computer-window-bar button:hover { background: #ffffff12; }
+.computer-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #85818f; flex-shrink: 0; }
+.computer-dot.active { background: #b18aff; box-shadow: 0 0 9px #a370ff70; }
+.computer-window-title { padding: 0 14px 10px; display: flex; gap: 12px; align-items: center; font-size: 12px; }
+.computer-window-title strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; flex: 1; }
+.computer-window-title > span { color: #ada6ba; font-size: 11px; }
+.computer-view { position: relative; flex: 1; min-height: 0; margin: 0 10px; border: 1px solid #ffffff15; border-radius: 9px; overflow: hidden; display: block; width: calc(100% - 20px); }
+.computer-screen { width: 100%; height: 100%; position: relative; background: #09090d; }
+.computer-screen-svg { display: block; width: 100%; height: 100%; }
+.computer-screen-svg.pointer-only { position: absolute; inset: 0; }
+.agent-pointer { color: #8a52ec; filter: drop-shadow(0 2px 3px #0008); }
+.agent-pointer.failed { color: #e86170; }
+.agent-click-ring { animation: computer-click 0.8s ease-out infinite; }
+@keyframes computer-click { from { r: 7; opacity: 1; } to { r: 27; opacity: 0; } }
+.computer-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 18px; gap: 5px; background-image: radial-gradient(#ffffff0a 1px, transparent 1px); background-size: 18px 18px; }
+.computer-placeholder strong { font-size: 12px; font-weight: 500; }
+.computer-placeholder > span:last-child { color: #8e899b; font-size: 11px; max-width: 440px; }
+.computer-monitor-icon { font-size: 30px; color: #a887e7; }
+.expand-hint { position: absolute; bottom: 8px; right: 8px; background: #15131ddd; border: 1px solid #ffffff18; border-radius: 5px; padding: 3px 7px; font-size: 10px; color: #c8c0d8; }
+.computer-view.expandable:hover { border-color: #a783e7; }
+.computer-window-footer { padding: 10px 14px; display: flex; align-items: center; gap: 12px; min-height: 60px; }
+.computer-window-footer > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.computer-window-footer strong { font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.computer-window-footer span { font-size: 10px; color: #90899f; }
+.computer-stop { padding: 6px 12px; background: #ef667418; color: #f798a2; border: 1px solid #ef667430; border-radius: 6px; font-size: 12px; }
+.computer-stop:disabled { opacity: 0.5; cursor: default; }
+.computer-card { margin: 12px 24px 0; border: 1px solid #ffffff15; border-radius: 10px; overflow: hidden; width: min(360px, calc(100% - 48px)); flex-shrink: 0; }
+.computer-card-open { display: block; width: 100%; text-align: left; }
+.computer-card-open .computer-screen { height: 140px; }
+.computer-card-caption { display: flex; gap: 8px; align-items: center; padding: 9px 12px; font-size: 12px; background: #18161e; }
+.computer-expand { margin-left: auto; }
+.computer-card-footer { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; font-size: 10px; color: #9890a6; background: #141219; }
+.computer-card-footer button { color: #f798a2; padding: 2px 6px; font-size: 11px; }
+@media (prefers-reduced-motion: reduce) { .agent-click-ring { animation: none; } }
+
+.target-app { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 24px 0; font-size: 11px; color: var(--text-2); }
+.target-app select { flex: 1; min-width: 120px; background: #222; border: 1px solid #ffffff18; border-radius: 5px; padding: 5px; color: var(--text); }
+.target-app button { padding: 3px 8px; font-size: 18px; }
+.target-app > span { flex-basis: 100%; font-size: 10px; }
+body:has(.agent-cursor-overlay) { background: transparent; }
+.agent-cursor-overlay { width: 110px; height: 80px; overflow: hidden; background: transparent; pointer-events: none; }

@@ -1,7 +1,11 @@
 import { app, BrowserWindow, Menu, MenuItem, shell, ipcMain } from 'electron'
 import { join } from 'path'
+import { registerComputerPreview } from './computerPreview'
 
-const BACKEND_PORT = 7123
+const requestedPort = Number(process.env.COMPUTER_USE_BACKEND_PORT || 7123)
+const BACKEND_PORT = Number.isInteger(requestedPort) && requestedPort > 0 && requestedPort < 65536 ? requestedPort : 7123
+let mainWindow = null
+const closeComputerPreview = registerComputerPreview(() => mainWindow)
 
 const log = {
   info:  (...a) => console.log( '[main]', ...a),
@@ -28,6 +32,16 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
     },
+  })
+
+  win.webContents.on('render-process-gone', closeComputerPreview)
+  win.webContents.on('did-start-navigation', (_event, _url, inPlace, isMainFrame) => {
+    if (isMainFrame && !inPlace) closeComputerPreview()
+  })
+  mainWindow = win
+  win.on('closed', () => {
+    closeComputerPreview()
+    mainWindow = null
   })
 
   // Right-click → Inspect Element
@@ -204,7 +218,7 @@ app.whenReady().then(() => {
   createWindow()
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    if (!mainWindow) {
       log.info('activate: no windows open, creating new window')
       createWindow()
     }

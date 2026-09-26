@@ -1,0 +1,16 @@
+{
+  "configurations": [
+    {
+      "name": "Mac",
+      "compilerPath": "/usr/bin/clang++",
+      "cppStandard": "c++17",
+      "cStandard": "c17",
+      "includePath": [
+        "${workspaceFolder}/backend/include",
+        "/opt/homebrew/include",
+        "/usr/local/include"
+      ]
+    }
+  ],
+  "version": 4
+}
